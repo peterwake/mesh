@@ -115,7 +115,9 @@ class build_ext(_build_ext):
 
         ext.include_dirs += [
             '/usr/local/include',
-            '/opt/homebrew/opt/boost/include'
+            '/usr/local/include/machine',
+            #'/opt/homebrew/opt/boost/include',
+            '/opt/homebrew/Caskroom/miniconda/base/envs/mesh39/include'
         ]
 
         # Remove empty paths
