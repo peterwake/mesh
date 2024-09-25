@@ -59,8 +59,8 @@ PyMODINIT_FUNC PyInit_visibility(void)
 
 
 template <typename CTYPE, int PYTYPE>
-npy_intp parse_pyarray(const PyArrayObject *py_arr, const array<CTYPE,3>* &cpp_arr){
-    if (py_arr->descr->type_num != PYTYPE || py_arr->nd != 2) {
+npy_intp parse_pyarray(PyArrayObject *py_arr, const array<CTYPE,3>* &cpp_arr){
+    if (PyArray_TYPE(py_arr) != PYTYPE || PyArray_NDIM(py_arr) != 2) {
         PyErr_SetString(PyExc_ValueError,
                 "Array must be of a specific type, and 2 dimensional");
         return NULL;
@@ -156,7 +156,7 @@ visibility_compute(PyObject *self, PyObject *args, PyObject *keywds)
             search->tree.accelerate_distance_queries();
         }
 
-        if (py_cams->descr->type_num != NPY_DOUBLE || py_cams->nd != 2) {
+        if (PyArray_TYPE(py_cams) != NPY_DOUBLE || PyArray_NDIM(py_cams) != 2) {
             PyErr_SetString(PyExc_ValueError, "Camera positions must be of type double, and 2 dimensional");
             return NULL;
         }
@@ -192,11 +192,11 @@ visibility_compute(PyObject *self, PyObject *args, PyObject *keywds)
 
         size_t C = cam_dims[0];
 
-        npy_intp result_dims[] = {C,search->points.size()};
+        npy_intp result_dims[] = {static_cast<npy_intp>(C), static_cast<npy_intp>(search->points.size())};
         PyObject *py_bin_visibility = PyArray_SimpleNew(2, result_dims, NPY_UINT32);
         PyObject *py_normal_dot_cam = PyArray_SimpleNew(2, result_dims, NPY_DOUBLE);
-        uint32_t* visibility = reinterpret_cast<uint32_t*>(PyArray_DATA(py_bin_visibility));
-        double* normal_dot_cam = reinterpret_cast<double*>(PyArray_DATA(py_normal_dot_cam));
+        uint32_t* visibility = reinterpret_cast<uint32_t*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(py_bin_visibility)));
+        double* normal_dot_cam = reinterpret_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(py_normal_dot_cam)));
 
         _internal_compute(search, pN, pCams, C, use_sensors,
                           pSensors, min_dist, visibility, normal_dot_cam);
