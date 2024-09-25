@@ -199,7 +199,8 @@ def _get_all_extensions():
         ('CGAL_NDEBUG', 1),
         ('MESH_CGAL_AVOID_COMPILED_VERSION', 1),
         ('CGAL_HAS_NO_THREADS', 1),
-        ('CGAL_NO_AUTOLINK_CGAL', 1)
+        ('CGAL_NO_AUTOLINK_CGAL', 1),
+        ('NPY_NO_DEPRECATED_API','NPY_1_7_API_VERSION')
     ]
 
     undef_macros = []
