@@ -207,7 +207,7 @@ def _get_all_extensions():
         return []
 
     # valid only for gcc/clang
-    extra_args = ['-O3']
+    extra_args = ['-O3', '-w', '-ferror-limit=1000']
 
     import sys
     if sys.platform.find('linux') > -1:
