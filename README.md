@@ -52,6 +52,28 @@ using the Makefile:
 $ BOOST_INCLUDE_DIRS=/path/to/boost/include make all
 ```
 
+
+Full Install on Mac M1
+
+```sh
+mkdir mesh39
+cd mesh39
+conda create --name mesh39 python=3.9
+conda activate mesh39
+conda install -c conda-forge numpy==1.19.5
+git clone https://github.com/peterwake/mesh/tree/m1-mods
+conda install -c anaconda boost
+conda info boost
+python -c "import boost; print(boost.__file__)"
+echo "/opt/homebrew/Caskroom/miniconda/base/envs/mesh39/include/boost"
+pip install pip==20.3.4
+cd /opt/homebrew/Caskroom/miniconda/base/envs/mesh39/lib/python3.9/site-packages/numpy/core/include
+python -c "import numpy; print(numpy.__version__)"\n
+pip install --no-deps --verbose --no-cache-dir mesh/.
+```
+
+
+
 Testing
 -------
 
