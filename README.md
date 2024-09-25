@@ -68,8 +68,31 @@ python -c "import boost; print(boost.__file__)"
 echo "/opt/homebrew/Caskroom/miniconda/base/envs/mesh39/include/boost"
 pip install pip==20.3.4
 cd /opt/homebrew/Caskroom/miniconda/base/envs/mesh39/lib/python3.9/site-packages/numpy/core/include
-python -c "import numpy; print(numpy.__version__)"\n
+python -c "import numpy; print(numpy.__version__)"
 pip install --no-deps --verbose --no-cache-dir mesh/.
+
+conda install pyopengl
+conda install pillow
+pip install zmq
+conda install scipy
+# pip install opencv-python
+# pip install pyyaml
+pip install zmq
+make documentation
+meshviewer view data/unittest/cylinder.obj
+```
+
+When it didn't work:
+```sh
+numpy --version
+python -c "import numpy; print(numpy.__version__)"
+pip uninstall numpy
+conda list
+conda remove numpy numpy-base
+conda clean --all
+conda install -c conda-forge numpy==1.19.5
+python -c "import numpy; print(numpy.__version__)"
+meshviewer view data/unittest/cylinder.obj
 ```
 
 
