@@ -61,13 +61,31 @@ class build_deflate_cgal(Command):
 
         CGAL_dir_deflate = os.path.abspath(self.build_temp)
 
-        log.info('[CGAL] deflating cgal from "%s" to "%s"', CGAL_archive, CGAL_dir_deflate)
+        log.info('[CGAL] checking presence of CGAL')
         if not os.path.exists(os.path.join(CGAL_dir_deflate, 'CGAL-4.7')):
+            log.info('[CGAL] deflating cgal from "%s" to "%s"', CGAL_archive, CGAL_dir_deflate)
+
             import tarfile
             os.makedirs(CGAL_dir_deflate)
 
             cgal_tar = tarfile.open(CGAL_archive, 'r:*')
             cgal_tar.extractall(CGAL_dir_deflate)
+
+            config_file_path = os.path.join(CGAL_dir_deflate, 'CGAL-4.7', 'include', 'CGAL', 'config.h')
+            if os.path.exists(config_file_path):
+                log.info('[CGAL] fixing CGAL endianness issue on silicon')
+                with open(config_file_path, 'r') as file:
+                    config_lines = file.readlines()
+
+                with open(config_file_path, 'w') as file:
+                    for i, line in enumerate(config_lines):
+                        if 243 <= i + 1 <= 266:
+                            if i + 1 == 243:
+                                file.write('#include <machine/endian.h>\n')
+                            continue
+                        file.write(line)
+            else:
+                log.warn('[CGAL] config.h not found')
 
         # create a dummy configuration file
         config_file = os.path.join(CGAL_dir_deflate, 'CGAL-4.7', 'include', 'CGAL', 'compiler_config.h')
